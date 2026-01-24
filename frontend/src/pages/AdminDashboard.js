@@ -188,16 +188,7 @@ const AdminDashboard = () => {
       setProducts(products.filter(p => p.id !== id));
     }
   }
-  async function updateOrderStatus(idOrOrderId, status) {
-    // Try backend first (Mongo _id), fallback to local state
-    const candidate = orders.find(o => (o._id === idOrOrderId) || (o.orderId === idOrOrderId) || (o.id === idOrOrderId));
-    if (candidate && candidate._id) {
-      const updated = await updateOrderStatusApi(candidate._id, status);
-      setOrders(orders.map(o => (o._id === updated._id) ? { ...updated, id: updated.orderId || updated.id } : o));
-    } else {
-      setOrders(orders.map(o => (o.id === idOrOrderId) ? { ...o, status } : o));
-    }
-  }
+ 
 
   async function assignAgentToOrder(orderId, agentEmail) {
     const candidate = orders.find(o => (o.orderId === orderId) || (o.id === orderId) || (o._id === orderId));
