@@ -1,6 +1,8 @@
-import { useState } from "react";
+// frontend/src/pages/AdminRegister.js
+
+import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { register } from "../api";
+import { registerUser } from "../mockApi";
 import "../App.css";
 
 function AdminRegister() {
@@ -15,14 +17,17 @@ function AdminRegister() {
     setLoading(true);
 
     try {
- await register({ name, email, password, role: "admin" });
-history.push("/admin/login");
+      await registerUser({
+        name,
+        email,
+        password,
+        role: "admin",
+      });
 
-
-      alert("Admin registered successfully. Please login.");
+      alert("Admin registered successfully");
       history.push("/admin/login");
     } catch (err) {
-      alert(err.message || "Registration failed");
+      alert("Registration failed");
     } finally {
       setLoading(false);
     }
@@ -58,8 +63,8 @@ history.push("/admin/login");
             required
           />
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register as Admin"}
+          <button disabled={loading}>
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 

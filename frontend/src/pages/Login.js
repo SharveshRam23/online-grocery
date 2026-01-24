@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { loginUser } from "../mockApi";
 import "../styles.css";
-import "../App.css";
 
 function Login() {
   const history = useHistory();
@@ -11,56 +10,55 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      alert("Please enter email and password");
-      return;
-    }
+
     try {
       const res = await loginUser({ email, password });
-      if (!res.success) {
-        alert(res.msg || 'Invalid credentials');
-        return;
-      }
-  const role = res.user.role;
-  const name = res.user.name;
-  localStorage.setItem('currentUser', JSON.stringify({ name, email, role }));
-      if (role === 'admin') history.push('/admin');
-      else if (role === 'delivery') history.push('/delivery');
-      else history.push('/dashboard');
-    } catch (e) {
-      alert('Login failed. Please check your email/password and try again.');
+
+      const { role, name } = res.user;
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ name, email, role })
+      );
+
+      if (role === "admin") history.push("/admin");
+      else if (role === "delivery") history.push("/delivery");
+      else history.push("/dashboard");
+    } catch {
+      alert("Login failed");
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-card">
-        <h2 className="login-title">Welcome back</h2>
+        <h2>Welcome back</h2>
+
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="login-btn">Login</button>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit">Login</button>
         </form>
-        <div className="register-link">
+
+        <p>
           Don’t have an account? <Link to="/register">Register</Link>
-        </div>
-        <div className="register-link" style={{ marginTop: 8 }}>
+        </p>
+        <p>
           Shop owner? <Link to="/admin/login">Admin Login</Link>
-        </div>
+        </p>
       </div>
     </div>
   );
