@@ -15,6 +15,7 @@ import {
   adjustProductStock
 } from '../mockApi';
 
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
   const [productSearch, setProductSearch] = useState('');
