@@ -2,7 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Navbar from '../components/Navbar';
 import './AdminDashboard.css';
 import sharedProducts from '../data/products';
-import { fetchProducts, createProduct as apiCreateProduct, updateProduct as apiUpdateProduct, deleteProductApi, fetchOrders, updateOrderStatusApi, fetchAgents, assignOrderApi, fetchUsers, adjustProductStock } from '../mockApi';
+
+import {
+  fetchProducts,
+  createProduct as apiCreateProduct,
+  updateProduct as apiUpdateProduct,
+  deleteProductApi,
+  fetchOrders,
+  fetchAgents,
+  assignOrderApi,
+  fetchUsers,
+  adjustProductStock
+} from '../mockApi';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
@@ -189,20 +200,7 @@ const AdminDashboard = () => {
     }
   }
   
-  async function updateOrderStatus(idOrOrderId, status) {
-    // Try backend first (Mongo _id), fallback to local state
-    const candidate = orders.find(o => (o._id === idOrOrderId) || (o.orderId === idOrOrderId) || (o.id === idOrOrderId));
-    if (candidate && candidate._id) {
-      const updated = await updateOrderStatusApi(candidate._id, status);
-      setOrders(orders.map(o => (o._id === updated._id) ? { ...updated, id: updated.orderId || updated.id } : o));
-    } else {
-      setOrders(orders.map(o => (o.id === idOrOrderId) ? { ...o, status } : o));
-    }
-  }
-  <button onClick={() => updateOrderStatus(order._id, 'paid')}>
-  Mark as Paid
-</button>
-
+  
 
   async function assignAgentToOrder(orderId, agentEmail) {
     const candidate = orders.find(o => (o.orderId === orderId) || (o.id === orderId) || (o._id === orderId));
