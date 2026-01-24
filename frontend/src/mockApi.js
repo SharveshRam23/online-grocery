@@ -4,16 +4,24 @@ const API =
   process.env.REACT_APP_API_URL ||
   "https://online-grocery-gc6r.onrender.com";
 
-// helpers
+/* ================= HELPERS ================= */
+
 const getToken = () => localStorage.getItem("token");
+
 const authHeaders = () =>
   getToken() ? { Authorization: `Bearer ${getToken()}` } : {};
 
 async function handleJson(res) {
   const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    throw new Error(data.msg || data.message || "Request failed");
+    throw new Error(
+      data.msg ||
+      data.message ||
+      "Request failed"
+    );
   }
+
   return data;
 }
 
@@ -22,28 +30,39 @@ async function handleJson(res) {
 export const registerUser = async (userData) => {
   const res = await fetch(`${API}/api/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(userData),
   });
+
   const data = await handleJson(res);
-  return { success: true, msg: data.msg };
+
+  return {
+    success: true,
+    msg: data.msg || "Registration successful",
+  };
 };
 
 export const loginUser = async ({ email, password }) => {
   const res = await fetch(`${API}/api/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ email, password }),
   });
 
   const data = await handleJson(res);
 
+  // 🔐 Persist token
   if (data.token) {
     localStorage.setItem("token", data.token);
   }
 
   return {
     success: true,
+    token: data.token,
     user: {
       name: data.name,
       email: data.email,
@@ -68,6 +87,7 @@ export const createProduct = async (product) => {
     },
     body: JSON.stringify(product),
   });
+
   return handleJson(res);
 };
 
@@ -80,6 +100,7 @@ export const updateProduct = async (id, updates) => {
     },
     body: JSON.stringify(updates),
   });
+
   return handleJson(res);
 };
 
@@ -88,6 +109,7 @@ export const deleteProductApi = async (id) => {
     method: "DELETE",
     headers: authHeaders(),
   });
+
   return handleJson(res);
 };
 
@@ -97,6 +119,7 @@ export const fetchOrders = async () => {
   const res = await fetch(`${API}/api/orders`, {
     headers: authHeaders(),
   });
+
   return handleJson(res);
 };
 
@@ -109,6 +132,7 @@ export const updateOrderStatusApi = async (id, status) => {
     },
     body: JSON.stringify({ status }),
   });
+
   return handleJson(res);
 };
 
@@ -121,6 +145,7 @@ export const assignOrderApi = async (id, assignedTo) => {
     },
     body: JSON.stringify({ assignedTo }),
   });
+
   return handleJson(res);
 };
 
@@ -130,6 +155,7 @@ export const fetchAgents = async () => {
   const res = await fetch(`${API}/api/agents`, {
     headers: authHeaders(),
   });
+
   return handleJson(res);
 };
 
@@ -137,5 +163,7 @@ export const fetchUsers = async () => {
   const res = await fetch(`${API}/api/users`, {
     headers: authHeaders(),
   });
+
   return handleJson(res);
 };
+
