@@ -14,7 +14,7 @@ async function handleJson(res) {
 }
 
 export const registerUser = async (userData) => {
-  const res = await fetch(`${API}/auth/register`, {
+  const res = await fetch(`${API}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData)
@@ -24,7 +24,7 @@ export const registerUser = async (userData) => {
 };
 
 export const loginUser = async ({ email, password }) => {
-  const res = await fetch(`${API}/auth/login`, {
+  const res = await fetch(`${API}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
