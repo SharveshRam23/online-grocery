@@ -20,9 +20,19 @@ export default function AdminLogin() {
     try {
       const res = await loginUser({ email, password });
 
+      // ✅ SAFETY CHECK
+      if (res.user.role !== "admin") {
+        throw new Error("Not an admin account");
+      }
+
+      // ✅ Store correct user info
       localStorage.setItem(
         "currentUser",
-        JSON.stringify({ role: "admin" })
+        JSON.stringify({
+          name: res.user.name,
+          email: res.user.email,
+          role: res.user.role,
+        })
       );
 
       history.push("/admin");
