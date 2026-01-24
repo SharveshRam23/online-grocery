@@ -1,6 +1,6 @@
 
 // Call backend directly to bypass any dev proxy issues
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5050/api';
+const API = process.env.REACT_APP_API_URL || 'https://online-grocery-gc6r.onrender.com';
 const getToken = () => localStorage.getItem('token');
 const authHeaders = () => (getToken() ? { Authorization: `Bearer ${getToken()}` } : {});
 
