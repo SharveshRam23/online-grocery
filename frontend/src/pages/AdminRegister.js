@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { registerUser } from "../mockApi";
+import { register } from "../api";
 import "../App.css";
 
 function AdminRegister() {
@@ -15,12 +15,9 @@ function AdminRegister() {
     setLoading(true);
 
     try {
-      await registerUser({
-        name,
-        email,
-        password,
-        role: "admin",
-      });
+ await register({ name, email, password, role: "admin" });
+history.push("/admin/login");
+
 
       alert("Admin registered successfully. Please login.");
       history.push("/admin/login");
