@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { registerUser } from "../mockApi";
 import "../App.css";
@@ -12,19 +12,20 @@ function AdminRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !email || !password) {
-      alert("All fields are required");
-      return;
-    }
     setLoading(true);
+
     try {
-      const res = await registerUser({ name, email, password, role: 'admin' });
-      if (!res.success) {
-        alert(res.msg || 'Registration failed');
-        return;
-      }
-      alert('Admin registration successful! Please login.');
-      history.push('/admin/login');
+      await registerUser({
+        name,
+        email,
+        password,
+        role: "admin",
+      });
+
+      alert("Admin registered successfully. Please login.");
+      history.push("/admin/login");
+    } catch (err) {
+      alert(err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -34,27 +35,37 @@ function AdminRegister() {
     <div className="page-container">
       <div className="card">
         <h2>Create Admin Account</h2>
+
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
           />
+
           <input
             type="email"
-            placeholder="Enter Email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
+
           <input
             type="password"
-            placeholder="Create Password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
-          <button type="submit" disabled={loading}>{loading ? "Registering..." : "Register as Admin"}</button>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register as Admin"}
+          </button>
         </form>
+
         <p>
           Already an admin? <Link to="/admin/login">Login</Link>
         </p>
@@ -64,5 +75,3 @@ function AdminRegister() {
 }
 
 export default AdminRegister;
-
-
