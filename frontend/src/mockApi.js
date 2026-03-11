@@ -2,7 +2,7 @@
 
 const API =
   process.env.REACT_APP_API_URL ||
-  "https://online-grocery-gc6r.onrender.com";
+  "https://online-grocery-backend-2tqm.onrender.com";
 
 // ================= HELPERS =================
 const getToken = () => localStorage.getItem("token");
@@ -101,7 +101,6 @@ export const adjustProductStock = async (id, delta) => {
   });
   return handleJson(res);
 };
-
 // ================= ORDERS =================
 export const fetchOrders = async () => {
   const res = await fetch(`${API}/api/orders`, {
