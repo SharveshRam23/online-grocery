@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import Navbar from "../components/Navbar";
 import Modal from "../components/Modal";
 import "./CustomerDashboard.css";
 import sharedProducts from "../data/products";
+import { fetchProducts } from "../mockApi";
 
 const CustomerDashboard = () => {
   const { addToCart, cart, totalPrice } = useCart();
@@ -14,15 +15,22 @@ const CustomerDashboard = () => {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
-  const products = useMemo(() => {
-    const stored = JSON.parse(localStorage.getItem('admin_products') || 'null');
-    if (!Array.isArray(stored)) return sharedProducts;
-    // Merge: overlay any admin-edited products by id, but keep all shared items
-    const byId = new Map(stored.map(p => [p.id, p]));
-    const merged = sharedProducts.map(sp => byId.get(sp.id) ? { ...sp, ...byId.get(sp.id) } : sp);
-    // Include any brand new products added by admin (ids not in shared)
-    stored.forEach(p => { if (!merged.find(m => m.id === p.id)) merged.push(p); });
-    return merged;
+  const [products, setProducts] = useState(sharedProducts);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await fetchProducts();
+        if (Array.isArray(data)) {
+          // Normalize _id to id for consistency with the rest of the component
+          setProducts(data.map(p => ({ ...p, id: p._id || p.id })));
+        }
+      } catch (err) {
+        console.error("Error fetching products from backend:", err);
+        // Fallback to sharedProducts or localStorage is already handled by initial state
+      }
+    }
+    load();
   }, []);
 
   const visibleProducts = useMemo(() => {

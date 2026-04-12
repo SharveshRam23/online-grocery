@@ -2,7 +2,7 @@
 
 const API =
   process.env.REACT_APP_API_URL ||
-  "https://online-grocery-backend-2tqm.onrender.com";
+  "http://localhost:5050";
 
 // ================= HELPERS =================
 const getToken = () => localStorage.getItem("token");
